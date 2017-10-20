@@ -1,0 +1,27 @@
+﻿<Window x:Class="LVTN.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LVTN"
+        mc:Ignorable="d"
+        Title="Prediction" Height="350" Width="525">
+    <Grid>
+        <Button
+            x:Name="KNN"
+            Content="K-Nearest Neibough"
+            Margin="10,10,389,260"
+         />
+        <Button
+            x:Name="HotWinter"
+            Content="Hoth-Winter"
+            Margin="153,10,246,260"
+         />
+        <TextBlock
+            x:Name="txtKNN"
+            Margin="10,80,416,220"
+            Text="KNN:"
+            VerticalAlignment="Center"
+         />
+    </Grid>
+</Window>
