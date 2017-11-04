@@ -7,12 +7,12 @@ using Common;
 
 namespace Algorithm
 {
-    public class FindImportantPoint : IAlgorithm
+    public class FindImportantPoint 
     {
 
         List<Point> listImportPoint;
         List<DataPrediction> data;
-
+        double deepCompare;
         public FindImportantPoint()
         {
             listImportPoint = new List<Point>();
@@ -27,12 +27,13 @@ namespace Algorithm
             this.data = insertData;
         }
 
-        public List<Point> GetlistImportPoint()
+        public List<Point> GetlistImportPoint(double R)
         {
+            deepCompare = R;
             Define();
             return this.listImportPoint;
         }
-        public void Define()
+        private void Define()
         {
             // First ImportantPoit is Begin Point
             int importantPoint = FindlistImportPointImportantPoint();
@@ -52,8 +53,8 @@ namespace Algorithm
             int iMax = 0;
             int indexSecondPoint = 0;
             while ((indexSecondPoint < data.Count - 1)
-                    && ((float)(data[indexSecondPoint].getValue() / data[iMin].getValue()) < Constants.R)
-                    && ((float)(data[iMax].getValue() / data[indexSecondPoint].getValue()) < Constants.R))
+                    && ((float)(data[indexSecondPoint].getValue() / data[iMin].getValue()) < deepCompare)
+                    && ((float)(data[iMax].getValue() / data[indexSecondPoint].getValue()) < deepCompare))
             {
                 if (data[indexSecondPoint].getValue() < data[iMin].getValue()) iMin = indexSecondPoint;
                 if (data[indexSecondPoint].getValue() > data[iMax].getValue()) iMax = indexSecondPoint;
@@ -100,7 +101,7 @@ namespace Algorithm
         private int FindMinPointNext(int ith)
         {
             int iMin = ith;
-            while (ith < data.Count && (float)(data[ith].getValue() / data[iMin].getValue()) < Constants.R)
+            while (ith < data.Count && (float)(data[ith].getValue() / data[iMin].getValue()) < deepCompare)
             {
                 if (data[ith].getValue() < data[iMin].getValue()) iMin = ith;
                 ith++;
@@ -121,7 +122,7 @@ namespace Algorithm
         private int FindMaxPointNext(int ith)
         {
             int iMax = ith;
-            while (ith < data.Count && (float)(data[iMax].getValue()/data[ith].getValue()) < Constants.R)
+            while (ith < data.Count && (float)(data[iMax].getValue()/data[ith].getValue()) < deepCompare)
             {
                 if (data[ith].getValue() > data[iMax].getValue()) iMax = ith;
                 ith++;

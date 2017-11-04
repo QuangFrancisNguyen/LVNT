@@ -9,6 +9,9 @@ namespace Common
 
         public bool isIPoint { get; set; } = false;
 
+        public bool isNewPoint { get; set; } = false;
+
+
         public DataPrediction(DateTime newTime, float newValue)
         {
             this.value = newValue;

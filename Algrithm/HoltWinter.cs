@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace Algorithm
 {
-    class HoltWinter : IAlgorithm
+    class HoltWinter 
     {
-        public void Define()
-        {
-            
-        }
     }
 }

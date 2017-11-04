@@ -6,22 +6,82 @@
         xmlns:local="clr-namespace:LVTN"
         mc:Ignorable="d"
         Title="Prediction" Height="350" Width="525">
-    <Grid>
+    <Grid x:Name="Main">
         <Button
             x:Name="KNN"
             Content="K-Nearest Neibough"
-            Margin="10,10,389,260"
+            Margin="10,10,369,260"
+            Click="btn_KNN"
          />
         <Button
             x:Name="HotWinter"
             Content="Hoth-Winter"
-            Margin="153,10,246,260"
+            Margin="165,10,205,260"
+            Click="btn_HotWinter"
+         />
+        <Button
+            x:Name="Browser"
+            Content="Browser"
+            Margin="395,234,23,60"
+            Click="btn_Browser"
+         />
+        <TextBlock
+            x:Name="txtNumOfPredic"
+            Margin="24,74,356,220"
+            Text="Prediction Horizon :"
+         />
+        <TextBox
+            x:Name="txt_NumOfPredic"
+            Margin="182,74,154,220"
+            Text="1"
+            BorderBrush="Black"
+            InputScope="Number"
          />
         <TextBlock
             x:Name="txtKNN"
-            Margin="10,80,416,220"
-            Text="KNN:"
-            VerticalAlignment="Center"
+            Margin="24,116,356,177"
+            Text="KNN :"
          />
-    </Grid>
+        <TextBox
+            x:Name="txt_KNN"
+            Margin="182,116,154,179"
+            Text="3"
+            BorderBrush="Black" 
+            InputScope="Number"
+         />
+        <TextBlock
+            x:Name="txtLenghtOfPattern"
+            Margin="24,153,356,141"
+            Text="Num IPoint each Partten :"
+         />
+        <TextBox
+            x:Name="txt_LenghtOfPattern"
+            Margin="182,153,154,141"
+            Text="3"
+            BorderBrush="Black"
+            InputScope="Number"
+         />
+        <TextBlock
+            x:Name="txtLenghtOfSequence"
+            Margin="24,194,356,100"
+            Text="Rate Important Point :"
+         />
+        <TextBox
+            x:Name="txt_rateIP"
+            Margin="182,194,154,100"
+            Text="1"
+            BorderBrush="Black"
+            InputScope="Number"
+         />
+        <TextBlock
+            x:Name="rateIP"
+            Margin="24,238,356,56"
+            Text="Selected Data :"
+         />
+        <TextBox
+            x:Name="txt_SelectedData"
+            Margin="182,237,154,57"
+            BorderBrush="Black"
+         />
+        </Grid>
 </Window>
