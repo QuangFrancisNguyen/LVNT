@@ -24,9 +24,6 @@ namespace Algorithm
 
         FindImportantPoint listPoint;
 
-        //Sequence Prediction
-        Pattern sequenEstimate;
-
         //Lengh Of pattern
         int patternLengh;
 
@@ -34,40 +31,33 @@ namespace Algorithm
         int numOfKNN;
         List<int> listKNN;
 
-        //Lenght Of Sequence
-        int lenghOfSequence;
-
         double deepCompare;
 
-        public KNearestNeighbor(int lenghOfPattern, int numOfKNN = 2, int lenghOfSequence = 1,double deepCompare = 1.1)
+        public KNearestNeighbor(int lenghOfPattern, int numOfKNN,double deepCompare)
         {
             this.numOfKNN = numOfKNN;
             listPoint = new FindImportantPoint();
             listPatter = new List<Pattern>();
             listKNN = new List<int>(this.numOfKNN);
-            sequenEstimate = new Pattern();
             listSequence = new List<Pattern>();
             this.patternLengh = lenghOfPattern;
-            this.lenghOfSequence = lenghOfSequence;
             this.deepCompare = deepCompare;
         }
-        public KNearestNeighbor(List<DataPrediction> data, int lenghOfPattern, int numOfKNN, int lenghOfSequence = 1, double deepCompare = 1.1)
+        public KNearestNeighbor(List<DataPrediction> data, int lenghOfPattern, int numOfKNN, double deepCompare)
         {
-            Init(data, lenghOfPattern, numOfKNN, lenghOfSequence, deepCompare);
+            Init(data, lenghOfPattern, numOfKNN, deepCompare);
         }
 
-        private void Init(List<DataPrediction> data, int lenghOfPattern, int numOfKNN, int lenghOfSequence, double deepCompare = 1.1)
+        private void Init(List<DataPrediction> data, int lenghOfPattern, int numOfKNN,double deepCompare)
         {
             this.numOfKNN = numOfKNN;
             this.dataForPredict = data;
             this.patternLengh = lenghOfPattern;
-            this.lenghOfSequence = lenghOfSequence;
             listPoint = new FindImportantPoint(dataForPredict);
             listPatter = new List<Pattern>();
             listImportantPoint = listPoint.GetlistImportPoint(deepCompare);
             listKNN = new List<int>(this.numOfKNN);
             listSequence = new List<Pattern>();
-            sequenEstimate = new Pattern();
             GenListPattern();
             this.deepCompare = deepCompare;
         }
@@ -101,11 +91,15 @@ namespace Algorithm
         }
         public List<DataPrediction> PredictWithKNN(List<DataPrediction> data)
         {
+            listKNN.Clear();
+            listPatter.Clear();
+            listSequence.Clear();
             List<DataPrediction> newData = new List<DataPrediction>();
             Pattern newPattern = new Pattern();
             this.dataForPredict = data;
-            listPoint.setData(data);
+            listPoint.setData(dataForPredict);
             listImportantPoint = listPoint.GetlistImportPoint(deepCompare);
+            showlistIP(listImportantPoint);
             GenListPattern();
             FindKNN();
             newPattern = CanculatorAvengerListOfSequence();
@@ -130,12 +124,12 @@ namespace Algorithm
                     }
                 }
             }
+            Function.AvgLenghPattern(listPatter);
             return newData;
         }
         // To generate List of Pattern
         private void GenListPattern()
         {
-            Console.WriteLine("------------BEGIN GENERATE LIST PATTERN--------------------");
             int lw = 0;
             int numPatter = 0;
             while (numPatter <= listImportantPoint.Count - patternLengh)
@@ -154,14 +148,11 @@ namespace Algorithm
                 numPatter++;
                 lw = 0;
             }
-            Console.WriteLine("------------END GENERATE LIST PATTERN--------------------");
         }
         private Pattern CanculatorAvengerListOfSequence()
         {
-            Console.WriteLine("------------BEGIN CANCULATOR AVG PATTERN--------------------");
-            //GenListSequence();
-            GenListSequenceImportPoint();
-            Pattern newPT = new Pattern(lenghOfSequence);
+            GenListSequence();
+            Pattern newPT = new Pattern();
             foreach (var pt in listSequence)
             {
                 newPT = addPattern(newPT, pt);
@@ -171,13 +162,11 @@ namespace Algorithm
                 newPT.listPoint[i].lenghBeforeDay = newPT.listPoint[i].lenghBeforeDay / listSequence.Count;
                 newPT.listPoint[i].value = newPT.listPoint[i].value / listSequence.Count;
             }
-            Console.WriteLine("------------END CANCULATOR AVG PATTERN--------------------");
             return newPT;
         }
 
         private Pattern addPattern(Pattern pt1, Pattern pt2)
         {
-            Console.WriteLine("------------BEGIN ADD PATTERN--------------------");
             Pattern newPT = new Pattern();
             if ((pt1.listPoint.Count != pt2.listPoint.Count)
                 && (pt1.listPoint.Count != 0 && pt2.listPoint.Count != 0))
@@ -214,7 +203,6 @@ namespace Algorithm
                     newPT.listPoint.Add(IP);
                 }
             }
-            Console.WriteLine("------------END ADD PATTERN --------------------");
             return newPT;
         }
         // Find K nearest neibough
@@ -233,13 +221,11 @@ namespace Algorithm
                 int indexNN = GetNN(listCompare, listKNN);
                 listKNN.Add(indexNN);
             }
-            Console.WriteLine("------------END FIND K NEAREST NEIBOUGH--------------------");
         }
 
         //Compare two pattern
         private float ComparePattern(Pattern pt1, Pattern pt2)
         {
-            Console.WriteLine("------------BEGIN COMPARE TWO PATTERN--------------------");
             float cp = 0;
             double total = 0;
             for (int i = 0; i < pt1.listPoint.Count; i++)
@@ -248,7 +234,6 @@ namespace Algorithm
                 total += Math.Pow(div, 2);
             }
             cp = (float)Math.Sqrt(total);
-            Console.WriteLine("------------BEGIN END TWO PATTERN--------------------");
             return cp;
         }
 
@@ -271,7 +256,6 @@ namespace Algorithm
                     }
                 }
             }
-            Console.WriteLine("------------END GET ONE KNN--------------------");
             return nearestN;
         }
 
@@ -283,20 +267,16 @@ namespace Algorithm
             {
                 List<Point> lsPoint = new List<Point>();
                 var indexPointInPattern = listPatter[eachKNN].getLastPoint().index;
-                for (int i = 1; i < lenghOfSequence + 1; i++)
-                {
-                    Point iP = new Point();
-                    iP.index = indexPointInPattern + i;
-                    iP.time = dataForPredict[indexPointInPattern + i].getTime();
-                    iP.value = dataForPredict[indexPointInPattern + i].getValue();
-                    iP.lenghBeforeDay = dataForPredict[indexPointInPattern + i].getTime().Subtract(dataForPredict[indexPointInPattern + i - 1].getTime()).Days;
-                    lsPoint.Add(iP);
-                }
+                Point iP = new Point();
+                iP.index = indexPointInPattern + 1;
+                iP.time = dataForPredict[indexPointInPattern + 1].getTime();
+                iP.value = dataForPredict[indexPointInPattern + 1].getValue();
+                iP.lenghBeforeDay = dataForPredict[indexPointInPattern + 1].getTime().Subtract(dataForPredict[indexPointInPattern].getTime()).Days;
+                lsPoint.Add(iP);
                 Pattern patternSequence = new Pattern();
                 patternSequence.listPoint = lsPoint;
                 listSequence.Add(patternSequence);
             }
-            Console.WriteLine("------------END GENERATE LIST SEQUENCE--------------------");
         }
 
         private void GenListSequenceImportPoint()
@@ -306,20 +286,25 @@ namespace Algorithm
             {
                 List<Point> lsPoint = new List<Point>();
                 var indexPointInPattern = listPatter[eachKNN].getLastPoint().index;
-                for (int i = 0; i < lenghOfSequence ; i++)
-                {
-                    Point iP = new Point();
-                    iP.index = listPatter[eachKNN + 1].listPoint[i].index;
-                    iP.time = listPatter[eachKNN + 1].listPoint[i].time;
-                    iP.value = listPatter[eachKNN + 1].listPoint[i].value;
-                    iP.lenghBeforeDay = listPatter[eachKNN + 1].listPoint[i].time.Subtract(listPatter[eachKNN].listPoint[i].time).Days;
-                    lsPoint.Add(iP);
-                }
+                Point iP = new Point();
+                iP.index = listPatter[eachKNN + 1].listPoint[1].index;
+                iP.time = listPatter[eachKNN + 1].listPoint[1].time;
+                iP.value = listPatter[eachKNN + 1].listPoint[1].value;
+                iP.lenghBeforeDay = listPatter[eachKNN + 1].listPoint[1].time.Subtract(listPatter[eachKNN].listPoint[1].time).Days;
+                lsPoint.Add(iP);
                 Pattern patternSequence = new Pattern();
                 patternSequence.listPoint = lsPoint;
                 listSequence.Add(patternSequence);
             }
             Console.WriteLine("------------END GENERATE LIST SEQUENCE IMPORTANT POINT--------------------");
+        }
+
+        private void showlistIP(List<Point> listImportantPoint)
+        {
+            foreach(var element in listImportantPoint)
+            {
+                Console.WriteLine("Important Point {0}---------Value---------{1}", element.index, element.value);
+            }
         }
     }
 }
